@@ -23,6 +23,61 @@ body{
   cursor:none;
 }
 
+/* ====== TELA DE ENTRADA (OVERLAY) ====== */
+.start-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--cream);
+  z-index: 9990; /* Fica acima de todo o site, mas abaixo do cursor */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+.start-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+.start-btn {
+  width: 120px;
+  height: 120px;
+  background: var(--rose);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 40px rgba(200,82,106,.4);
+  animation: pulseBtn 2s infinite;
+  padding-left: 8px; /* Ajuste visual para o ícone de play ficar no centro */
+  transition: transform 0.3s;
+}
+.start-btn:hover {
+  transform: scale(1.05);
+}
+.start-text {
+  margin-top: 2.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.6rem;
+  color: var(--rose);
+  letter-spacing: 0.15em;
+  animation: fadeIn 2s ease;
+}
+@keyframes pulseBtn {
+  0% { box-shadow: 0 0 0 0 rgba(200,82,106,.6); }
+  70% { box-shadow: 0 0 0 30px rgba(200,82,106,0); }
+  100% { box-shadow: 0 0 0 0 rgba(200,82,106,0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ====== CURSOR ====== */
 .cursor{width:8px;height:8px;background:var(--rose);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:multiply}
 .cursor-ring{width:32px;height:32px;border:1px solid var(--rose);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:transform .4s cubic-bezier(.25,.46,.45,.94);opacity:.5}
@@ -84,7 +139,7 @@ section, .section{position:relative;z-index:10}
 .scroll-line{width:1px;height:40px;background:var(--gold);animation:scaleY 1.5s ease-in-out infinite;transform-origin:top}
 @keyframes scaleY{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(.3);opacity:.3}}
 
-/* LIT state — revealed on load */
+/* LIT state — revealed on click do botão play */
 body.lit .tagline,body.lit .hero-name,body.lit .hero-sub,body.lit .scroll-hint{opacity:1;transform:translateY(0)}
 body.lit .divider{opacity:1}
 
@@ -139,7 +194,6 @@ body.lit .divider{opacity:1}
   height:min(460px, 62vw);
   position:relative;
   transform-style:preserve-3d;
-  /* Animação do livro inteiro deslizando para manter a lombada no meio */
   transition:transform 1.2s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
@@ -147,7 +201,6 @@ body.lit .divider{opacity:1}
   position:absolute;inset:0;
   transform-origin:left center;
   transform-style:preserve-3d;
-  /* Animação fluida da página virando */
   transition:transform 1.4s cubic-bezier(0.4, 0.0, 0.2, 1);
   border-radius:2px 10px 10px 2px;
   box-shadow:6px 0 28px rgba(0,0,0,.18);
@@ -156,15 +209,7 @@ body.lit .divider{opacity:1}
 .page-back{transform:rotateY(180deg)}
 .page.turned{transform:rotateY(-180deg)}
 .page-img{width:100%;height:100%;object-fit:cover;display:block}
-.photo-placeholder{
-  width:100%;height:100%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-  background:linear-gradient(135deg,#fdf0f2 0%,#f0e0e8 100%);
-}
-.ph-icon{font-size:3.5rem;opacity:.35}
-.ph-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:#b07080;opacity:.65}
-.ph-num{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.55}
-.page-corner{position:absolute;bottom:12px;right:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.75rem;color:rgba(180,140,150,.45)}
+.page-corner{position:absolute;bottom:12px;right:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.75rem;color:rgba(180,140,150,.8)}
 .book-spine{position:absolute;left:0;top:0;bottom:0;width:10px;background:linear-gradient(to right,#c4a0a8,#e0c0c8);border-radius:2px 0 0 2px;z-index:20}
 
 /* Auto-flip progress bar */
@@ -265,16 +310,6 @@ body.lit .divider{opacity:1}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
   pointer-events:none;z-index:5;opacity:.4;mix-blend-mode:overlay;
 }
-.screen-placeholder{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:16px;
-  background:linear-gradient(135deg,#0a0305 0%,#1a0810 50%,#0a0305 100%);
-  color:#8a6070;
-}
-.screen-placeholder .film-icon{font-size:3rem;opacity:.5}
-.screen-placeholder p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;opacity:.6;letter-spacing:.05em}
-.screen-placeholder small{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:#b8956a;opacity:.5}
 .scanlines{
   position:absolute;inset:0;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px);
@@ -325,13 +360,16 @@ body.lit .divider{opacity:1}
 </head>
 <body>
 
+<div class="start-overlay" id="startOverlay">
+  <button class="start-btn" id="startBtn">▶</button>
+  <p class="start-text">toque para começar</p>
+</div>
+
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 <div id="particles"></div>
 
-<audio id="bgMusic" loop preload="auto">
-  <source src="music.mpeg" type="audio/mpeg">
-</audio>
+<audio id="bgMusic" src="music.mpeg" loop preload="auto"></audio>
 
 <div class="music-player" id="musicPlayer">
   <button class="music-btn" id="musicBtn">⏸</button>
@@ -372,12 +410,12 @@ body.lit .divider{opacity:1}
     <h2 class="reasons-title reveal">Por que <em>você</em></h2>
     <p class="reasons-sub reveal">razões que nunca terminam</p>
     <div class="reasons-grid">
-      <div class="reason-card reveal"><span class="reason-num">01</span><p class="reason-text">Pelo seu jeito único de ver o mundo, como se tudo tivesse um pouco de magia.</p></div>
-      <div class="reason-card reveal"><span class="reason-num">02</span><p class="reason-text">Pelo seu sorriso, que chega antes mesmo que você perceba que está sorrindo.</p></div>
-      <div class="reason-card reveal"><span class="reason-num">03</span><p class="reason-text">Pela sua força silenciosa, que inspira sem precisar dizer uma palavra.</p></div>
-      <div class="reason-card reveal"><span class="reason-num">04</span><p class="reason-text">Pelo modo como você faz os momentos ordinários se tornarem especiais.</p></div>
-      <div class="reason-card reveal"><span class="reason-num">05</span><p class="reason-text">Por existir, e por cruzar o meu caminho — isso já foi mais do que suficiente.</p></div>
-      <div class="reason-card reveal"><span class="reason-num">06</span><p class="reason-text">Por tudo o que você é, e por tudo aquilo que ainda vamos descobrir juntos.</p></div>
+      <div class="reason-card reveal"><span class="reason-num">01</span><p class="reason-text">Pelo seu sorriso, que ilumina tudo ao redor e faz qualquer dia parecer mais leve.</p></div>
+      <div class="reason-card reveal"><span class="reason-num">02</span><p class="reason-text">Pelo seu cabelo, tão bonito, como se carregasse a sua própria luz.</p></div>
+      <div class="reason-card reveal"><span class="reason-num">03</span><p class="reason-text">Pelos seus olhos, que transmitem calma, sinceridade e uma beleza impossível de ignorar.</p></div>
+      <div class="reason-card reveal"><span class="reason-num">04</span><p class="reason-text">Pela sua voz, doce e marcante ao mesmo tempo, capaz de trazer paz só de ouvir.</p></div>
+      <div class="reason-card reveal"><span class="reason-num">05</span><p class="reason-text">A presença do Espírito Santo em você que transmite paz</p></div>
+      <div class="reason-card reveal"><span class="reason-num">06</span><p class="reason-text">Pela sua pureza de coração, rara e verdadeira, que faz você ser ainda mais especial.</p></div>
     </div>
   </div>
 </div>
@@ -388,53 +426,54 @@ body.lit .divider{opacity:1}
     <h2 class="section-title reveal">Cada página, <em>você</em></h2>
 
     <div class="book-container">
-  <div class="book" id="book">
-    <div class="book-spine"></div>
+      <div class="book" id="book">
+        <div class="book-spine"></div>
 
-    <div class="page" id="page1" style="z-index:8">
-      <div class="page-front">
-        <img class="page-img" src="foto1.jpeg" alt="Foto 1">
-        <span class="page-corner">1</span>
-      </div>
-      <div class="page-back">
-        <img class="page-img" src="foto2.jpeg" alt="Foto 2">
-        <span class="page-corner">2</span>
-      </div>
-    </div> <div class="page" id="page2" style="z-index:7">
-      <div class="page-front">
-        <img class="page-img" src="foto3.jpeg" alt="Foto 3">
-        <span class="page-corner">3</span>
-      </div>
-      <div class="page-back">
-        <img class="page-img" src="foto4.jpeg" alt="Foto 4">
-        <span class="page-corner">4</span>
+        <div class="page" id="page1" style="z-index:8">
+          <div class="page-front">
+            <img class="page-img" src="foto1.jpeg" alt="Foto 1">
+            <span class="page-corner">1</span>
+          </div>
+          <div class="page-back">
+            <img class="page-img" src="foto2.jpeg" alt="Foto 2">
+            <span class="page-corner">2</span>
+          </div>
+        </div>
+
+        <div class="page" id="page2" style="z-index:7">
+          <div class="page-front">
+            <img class="page-img" src="foto3.jpeg" alt="Foto 3">
+            <span class="page-corner">3</span>
+          </div>
+          <div class="page-back">
+            <img class="page-img" src="foto4.jpeg" alt="Foto 4">
+            <span class="page-corner">4</span>
+          </div>
+        </div>
+
+        <div class="page" id="page3" style="z-index:6">
+          <div class="page-front">
+            <img class="page-img" src="foto5.jpeg" alt="Foto 5">
+            <span class="page-corner">5</span>
+          </div>
+          <div class="page-back">
+            <img class="page-img" src="foto6.jpeg" alt="Foto 6">
+            <span class="page-corner">6</span>
+          </div>
+        </div>
+
+        <div class="page" id="page4" style="z-index:5">
+          <div class="page-front">
+            <img class="page-img" src="foto7.jpeg" alt="Foto 7">
+            <span class="page-corner">7</span>
+          </div>
+          <div class="page-back">
+            <img class="page-img" src="foto8.jpeg" alt="Foto 8">
+            <span class="page-corner">8</span>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="page" id="page3" style="z-index:6">
-      <div class="page-front">
-        <img class="page-img" src="foto5.jpeg" alt="Foto 5">
-        <span class="page-corner">5</span>
-      </div>
-      <div class="page-back">
-        <img class="page-img" src="foto6.jpeg" alt="Foto 6">
-        <span class="page-corner">6</span>
-      </div>
-    </div>
-
-    <div class="page" id="page4" style="z-index:5">
-      <div class="page-front">
-        <img class="page-img" src="foto7.jpeg" alt="Foto 7">
-        <span class="page-corner">7</span>
-      </div>
-      <div class="page-back">
-        <img class="page-img" src="foto8.jpeg" alt="Foto 8">
-        <span class="page-corner">8</span>
-      </div>
-    </div>
-
-  </div>
-</div>
 
     <div class="book-progress-wrap"><div class="book-progress" id="bookProgress"></div></div>
 
@@ -469,52 +508,61 @@ body.lit .divider{opacity:1}
 </div>
 
 
+
+   
+
 <div class="floating-hearts">
   <button class="heart-btn" id="heartBtn">♡</button>
 </div>
 
 <script>
-/* ====== CARREGAMENTO INICIAL ====== */
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.body.classList.add('lit');
-  }, 100);
-});
-
 /* ====== CURSOR ====== */
 const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.transform=`translate(${mx-4}px,${my-4}px)`});
 (function lr(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.transform=`translate(${rx-16}px,${ry-16}px)`;requestAnimationFrame(lr)})();
 
-/* ====== MUSIC AUTOPLAY ====== */
-const audio=document.getElementById('bgMusic');
-const musicBtn=document.getElementById('musicBtn');
-const bars=document.getElementById('musicBars');
-const musicPlayer=document.getElementById('musicPlayer');
-let playing=false;
+/* ====== LÓGICA DO BOTÃO DE ENTRADA & ÁUDIO ====== */
+const startOverlay = document.getElementById('startOverlay');
+const startBtn = document.getElementById('startBtn');
+const audio = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
+const bars = document.getElementById('musicBars');
+const musicPlayer = document.getElementById('musicPlayer');
+let playing = false;
 
-function tryPlay(){
-  audio.volume=0;
-  audio.play().then(()=>{
-    playing=true;
-    musicBtn.textContent='⏸';
+startBtn.addEventListener('click', () => {
+  // Esconde o overlay suavemente
+  startOverlay.classList.add('hidden');
+  
+  // Oculta completamente após a transição para não bloquear os cliques na página
+  setTimeout(() => { startOverlay.style.display = 'none'; }, 1200);
+
+  // Inicia as animações da página inicial (nome dela subindo, etc)
+  document.body.classList.add('lit');
+
+  // Lógica garantida do Áudio
+  audio.volume = 0; // Volume começa zerado
+  audio.play().then(() => {
+    playing = true;
+    musicBtn.textContent = '⏸';
     bars.classList.remove('paused');
-    musicPlayer.classList.add('visible');
-    // Fade in volume
-    let v=0;
-    const fade=setInterval(()=>{v=Math.min(v+.02,1);audio.volume=v;if(v>=1)clearInterval(fade)},80);
-  }).catch(()=>{
-    musicPlayer.classList.add('visible');
-    musicBtn.textContent='▶';
-    bars.classList.add('paused');
+    musicPlayer.classList.add('visible'); // Mostra o mini-player
+    
+    // Efeito de Fade-in no áudio
+    let v = 0;
+    const fade = setInterval(() => {
+      v = Math.min(v + 0.05, 1);
+      audio.volume = v;
+      if(v >= 1) clearInterval(fade);
+    }, 100);
+  }).catch((err) => {
+    console.log("Erro no áudio:", err);
   });
-}
-window.addEventListener('click',()=>{if(!playing)tryPlay()},{once:true});
-window.addEventListener('touchstart',()=>{if(!playing)tryPlay()},{once:true});
-setTimeout(tryPlay,500);
+});
 
-musicBtn.addEventListener('click',e=>{
+// Controle do player pequeno no canto da tela
+musicBtn.addEventListener('click', e => {
   e.stopPropagation();
   if(playing){audio.pause();musicBtn.textContent='▶';bars.classList.add('paused');playing=false}
   else{audio.play();musicBtn.textContent='⏸';bars.classList.remove('paused');playing=true}
@@ -553,20 +601,17 @@ for(let i=0;i<26;i++){
   pc.appendChild(el);
 }
 
-/* ====== PHOTO BOOK AUTO-FLIP (LOOP INFINITO & CENTRALIZAÇÃO) ====== */
+/* ====== PHOTO BOOK AUTO-FLIP ====== */
 const pages=document.querySelectorAll('.page'),total=pages.length;
 let cur=0,autoFlip=true,autoTimer=null,progressTimer=null,progressStart=null;
 const prevBtn=document.getElementById('prevPage'),nextBtn=document.getElementById('nextPage');
 const counter=document.getElementById('pageCounter');
 const progressBar=document.getElementById('bookProgress');
 const autoBtn=document.getElementById('autoBtn');
-const PAGE_DELAY=4000; // Tempo aumentado para ficar mais contemplativo
+const PAGE_DELAY=4000;
 
 function updateBook(){
   const bookEl = document.getElementById('book');
-  
-  // Se for a primeira página (livro fechado), ele fica no centro
-  // Se estiver aberto, ele desloca a si mesmo para o lado para manter a lombada no meio!
   if(cur === 0) {
       bookEl.style.transform = 'translateX(0)';
   } else {
@@ -599,13 +644,12 @@ function scheduleNext(){
   if(!autoFlip)return;
   startProgress();
   autoTimer=setTimeout(()=>{
-    cur = (cur + 1) % total; // Aqui acontece o LOOP infinito
+    cur = (cur + 1) % total; 
     updateBook();
     scheduleNext();
   },PAGE_DELAY);
 }
 
-// Botões manuais também funcionam em loop agora
 nextBtn.addEventListener('click',()=>{
     cur = (cur + 1) % total;
     updateBook();
